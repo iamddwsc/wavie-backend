@@ -12,6 +12,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
+    protected $primaryKey = 'userId';
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +20,9 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
+        'photo',
         'email',
         'password',
     ];
@@ -43,11 +46,15 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    public function getJWTIdentifier() {
+    public function getJWTIdentifier(){
         return $this->getKey();
     }
 
-    public function getJWTCustomClaims() {
+    public function getJWTCustomClaims(){
         return [];
+    }
+    
+    public function comments() {
+        return $this->hasMany(Comment::class, 'comment_id');
     }
 }
